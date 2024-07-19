@@ -1,0 +1,108 @@
+
+DECLARE Inventory SHARED ROW;
+DECLARE Initialised SHARED BOOLEAN FALSE;
+
+	CREATE PROCEDURE Initialise() BEGIN
+		BEGIN ATOMIC
+		IF Initialised = FALSE THEN
+			DECLARE ItemRef REFERENCE TO Inventory;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Peruvian';
+			SET ItemRef.Quantity = 850;
+			SET ItemRef.Price = 3.00;
+			SET ItemRef.Strength = 1;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Indian';
+			SET ItemRef.Quantity = 475;
+			SET ItemRef.Price = 3.35;
+			SET ItemRef.Strength = 2;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Moroccan';
+			SET ItemRef.Quantity = 600;
+			SET ItemRef.Price = 2.80;
+			SET ItemRef.Strength = 3;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Mexican';
+			SET ItemRef.Quantity = 350;
+			SET ItemRef.Price = 3.00;
+			SET ItemRef.Strength = 4;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Kenyan';
+			SET ItemRef.Quantity = 380;
+			SET ItemRef.Price = 3.30;
+			SET ItemRef.Strength = 5;			
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Guatamalan';
+			SET ItemRef.Quantity = 180;
+			SET ItemRef.Price = 3.10;
+			SET ItemRef.Strength = 5;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item';
+			SET ItemRef.Name = 'Colombian';
+			SET ItemRef.Quantity = 715;
+			SET ItemRef.Price = 3.05;
+			SET ItemRef.Strength = 6;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Ethiopian';
+			SET ItemRef.Quantity = 850;
+			SET ItemRef.Price = 3.00;
+			SET ItemRef.Strength = 7;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Vietnamese';
+			SET ItemRef.Quantity = 815;
+			SET ItemRef.Price = 2.95;
+			SET ItemRef.Strength = 7;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Brazilian';
+			SET ItemRef.Quantity = 160;
+			SET ItemRef.Price = 3.25;
+			SET ItemRef.Strength = 8;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Indonesian';
+			SET ItemRef.Quantity = 200;
+			SET ItemRef.Price = 2.75;
+			SET ItemRef.Strength = 9;
+			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
+			SET ItemRef.Name = 'Sumatran';
+			SET ItemRef.Quantity = 800;
+			SET ItemRef.Price = 2.75;
+			SET ItemRef.Strength = 10;			
+			SET Initialised = TRUE;
+		END IF;				
+						 
+		END;
+	END;
+
+	CREATE FUNCTION GatherData(IN InputRoot REFERENCE, INOUT Environment REFERENCE) BEGIN
+		DECLARE DesiredQuantity INTEGER CAST(InputRoot.JSON.Data.Quantity AS INTEGER);
+		DECLARE DesiredStrength INTEGER CAST(InputRoot.JSON.Data.Strength AS INTEGER);
+		SET Environment.Inventory.Item[] = SELECT * FROM Inventory.Item[] AS I
+											WHERE I.Quantity > DesiredQuantity 
+											AND I.Strength = DesiredStrength;
+		SET Environment.Variables.Quantity = DesiredQuantity;
+		SET Environment.Variables.Strength = DesiredStrength;
+		SET Environment.Variables.NumberOfCoffeesCorrectStrength = CARDINALITY(Environment.Inventory.Item[]);
+		DECLARE datetimepattern CHAR 'yyyyMMdd HH:mm:ss ZZZ';
+		SET Environment.Variables.Datetime = CAST(CURRENT_TIMESTAMP AS CHAR FORMAT datetimepattern);
+		SET Environment.Variables.Hostname = GetHostname();
+		SET Environment.Variables.Application = ApplicationLabel;
+		SET Environment.Variables.Flow = MessageFlowLabel;
+		SET Environment.Variables.SoftwareVersion = BrokerVersion;		
+	END;
+
+	CREATE FUNCTION PrepareData(INOUT Environment REFERENCE) BEGIN
+
+		DECLARE ItemRef REFERENCE TO Environment.Inventory;
+		MOVE ItemRef FIRSTCHILD;
+		DECLARE Message CHAR ''; 
+		WHILE LASTMOVE(ItemRef) DO
+			SET Message = Message || '(' || ItemRef.Name || ' has available quantity of ' || CAST(ItemRef.Quantity AS CHAR) || ' and has price ' || CAST(ItemRef.Price AS CHAR) || ')';
+			MOVE ItemRef NEXTSIBLING;
+		END WHILE;
+		SET Environment.Variables.MessageDetail = Message;
+	END;
+
+
+CREATE FUNCTION  GetHostname()
+ RETURNS CHAR
+ LANGUAGE JAVA 
+ EXTERNAL NAME "com.ibm.dev.MyClass.myHostnameMethod";
