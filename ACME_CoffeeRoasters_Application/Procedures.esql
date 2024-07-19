@@ -4,6 +4,7 @@ DECLARE Initialised SHARED BOOLEAN FALSE;
 
 	CREATE PROCEDURE Initialise() BEGIN
 		BEGIN ATOMIC
+-- test
 		IF Initialised = FALSE THEN
 			DECLARE ItemRef REFERENCE TO Inventory;
 			CREATE LASTCHILD OF Inventory AS ItemRef Type Name Name 'Item'; 
