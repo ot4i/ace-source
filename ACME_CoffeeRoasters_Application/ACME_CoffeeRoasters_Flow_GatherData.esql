@@ -8,10 +8,10 @@ CREATE COMPUTE MODULE ACME_CoffeeRoasters_Flow_GatherData
 		CALL Initialise();
 		CALL GatherData(InRef, EnvRef);
 		-- ==================
-		IF Environment.Variables.NumberOfCoffeesCorrectStrength = 0 THEN
-			SET Environment.Inventory.Item[] = 
-				SELECT * FROM Inventory.Item[] AS I WHERE I.Strength = CAST(InputRoot.JSON.Data.Strength AS INTEGER);
-		END IF;
+		-- IF Environment.Variables.NumberOfCoffeesCorrectStrength = 0 THEN
+		--	SET Environment.Inventory.Item[] = 
+		--		SELECT * FROM Inventory.Item[] AS I WHERE I.Strength = CAST(InputRoot.JSON.Data.Strength AS INTEGER);
+		-- END IF;
 		-- ==================
 		CALL PrepareData(EnvRef);
 		
