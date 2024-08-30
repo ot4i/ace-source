@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><ns2:testprojectDescriptor xmlns="http://com.ibm.etools.mft.descriptor.base" xmlns:ns2="http://com.ibm.etools.mft.descriptor.testproject"><references><applicationReference><applicationName>ACME_CoffeeRoasters_Application</applicationName></applicationReference></references></ns2:testprojectDescriptor>

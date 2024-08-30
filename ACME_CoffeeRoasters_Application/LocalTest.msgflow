@@ -5,7 +5,7 @@
     <translation xmi:type="utility:TranslatableString" key="LocalTest" bundleName="LocalTest" pluginId="ACME_CoffeeRoasters_Application"/>
     <colorGraphic16 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/ACME_CoffeeRoasters_Application/icons/full/obj16/LocalTest.gif"/>
     <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/ACME_CoffeeRoasters_Application/icons/full/obj30/LocalTest.gif"/>
-    <version xmi:type="utility:ConstantString" string="2.0"/>
+    <version xmi:type="utility:ConstantString" string="1.0"/>
     <composition>
       <nodes xmi:type="ComIbmWSInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_1" location="27,70" URLSpecifier="/acme*" parseQueryString="true" messageDomainProperty="JSON">
         <translation xmi:type="utility:ConstantString" string="HTTP Input"/>
